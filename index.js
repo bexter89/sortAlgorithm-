@@ -44,18 +44,12 @@ if (versionString.includes('latest')) {
       versionStorage[latestTag] = {sortField1: num ,sortField2: num }
     } else {      
       if (!versionStorage[versionString]) {
-        // instantiate the version in the object,
-        // give it a value for second num too, to help sort. 
-        // can/might be reassigned in next step
-        versionStorage[versionString] = {sortField1: num, sortField2: '100' }
+        // instantiate the version in the object, give it default value of 0 for sort fields for 2 & 3
+        versionStorage[versionString] = {sortField1: num, sortField2: '0', sortField3: '0' }
       } else {
-      fieldCount = fieldCount + 1;
-      if (fieldCount == 3) {
-        console.log('*** three! ****')
-      }
-      var fieldObject = {
-        ['sortField' + fieldCount]: num 
-      }
+      fieldCount++;
+      var fieldObject = { ['sortField' + fieldCount]: num };
+      // re-assign sortFields 2 and 3 ass needed with actual num vals
       versionStorage[versionString] = Object.assign(versionStorage[versionString], fieldObject)    
       }
     }
@@ -80,17 +74,15 @@ var parseStorage = function () {
     if (a[1].sortField1 === b[1].sortField1) {
       //we'll also look if minor version is same
       if (a[1].sortField2 === b[1].sortField2) {
+        // if it is, sort by 3rd field
         return b[1].sortField3 - a[1].sortField3;
       }
       // if not just, sort by the second field
       return b[1].sortField2 - a[1].sortField2;
+      
     } else { // if sort field 1 is not the same
-      // check if the the second field is the same
-      if (a[1].sortField2 === b[1].sortField2) {
-        return b[1].sortField3 - a[1].sortField3;
-      } else {
+      //sort by the first field
       return b[1].sortField1 - a[1].sortField1
-      }
     }
   })
   // return array of sorted strings
